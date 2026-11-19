@@ -1,0 +1,46 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import SkillsExplorer, { type ExplorerGroup } from './SkillsExplorer';
+import { experience, projects, skillGroups } from '@/data/portfolio';
+import { normalizeTech } from '@/utils/text';
+
+interface Props {
+  index: string;
+}
+const { index } = Astro.props;
+
+/** Attach real evidence (projects using the skill) to every skill; drop empty groups. */
+const groups: ExplorerGroup[] = skillGroups
+  .filter((g) => g.skills.length > 0)
+  .map((g) => ({
+    id: g.id,
+    title: g.title,
+    blurb: g.blurb,
+    skills: g.skills.map((skill) => {
+      const key = normalizeTech(skill.name);
+      return {
+        name: skill.name,
+        note: skill.note,
+        usedIn: projects
+          .filter((p) => p.stack.some((tech) => normalizeTech(tech) === key))
+          .map((p) => ({ title: p.title, href: `/projects/${p.slug}/` })),
+      };
+    }),
+  }));
+
+const total = groups.reduce((n, g) => n + g.skills.length, 0);
+const internshipTech = new Set(experience.flatMap((e) => e.technologies));
+---
+
+<section id="skills" class="section-y relative" aria-labelledby="skills-title" data-nav-section="skills">
+  <div class="container-x">
+    <SectionHeading index={index} label="Technical skills" id="skills-title" title="The" accent="toolkit" align="split">
+      {total} technologies across {groups.length} areas. No proficiency bars — each skill links to the projects where it
+      was actually used{internshipTech.size > 0 ? ' or the roles it was used in' : ''}.
+    </SectionHeading>
+
+    <div data-reveal>
+      <SkillsExplorer client:visible groups={groups} />
+    </div>
+  </div>
+</section>

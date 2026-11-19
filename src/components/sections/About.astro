@@ -1,0 +1,120 @@
+---
+import { ArrowRight } from 'lucide-react';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { about, education, experience, person } from '@/data/portfolio';
+import { pad } from '@/utils/text';
+
+interface Props {
+  index: string;
+}
+const { index } = Astro.props;
+
+const degree = education[0];
+/** Facts for the `whoami` spec card — all pulled from the data file. */
+const spec: [string, string][] = [
+  ['name', person.name],
+  ['role', person.role],
+  ['base', person.location],
+  ...(degree ? ([['study', `${degree.degree}, ${degree.shortName ?? degree.institution}`]] as [string, string][]) : []),
+  ['focus', 'Full-stack · Containers · AWS'],
+  ...(experience.length
+    ? ([['interned', experience.map((e) => e.organization).join(', ')]] as [string, string][])
+    : []),
+];
+---
+
+<section
+  id="about"
+  class="section-y relative overflow-hidden bg-[var(--color-surface)]"
+  aria-labelledby="about-title"
+  data-nav-section="about"
+>
+  <div class="container-x">
+    <SectionHeading index={index} label="About" id="about-title" title="Engineer of the" accent="whole path" tail="— code to cloud." />
+
+    <div class="grid gap-14 lg:grid-cols-12 lg:gap-10">
+      <!-- Left: pull quote + spec card (sticky on desktop) -->
+      <div class="lg:col-span-5">
+        <div class="lg:sticky lg:top-[calc(var(--header-h)+3rem)]">
+          <figure data-reveal>
+            <blockquote class="serif-accent text-[clamp(1.9rem,3.4vw,2.9rem)] leading-[1.08] text-[var(--color-ink)]">
+              <span class="text-[var(--color-accent)]">“</span>{about.pullQuote}<span class="text-[var(--color-accent)]">”</span>
+            </blockquote>
+          </figure>
+
+          <div class="whoami mt-10 overflow-hidden rounded-[var(--radius-md)]" data-reveal data-reveal-delay="120">
+            <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <span class="label text-[var(--color-mist)]">~/daniyal</span>
+              <span class="label text-[var(--color-mist)]">$ whoami --verbose</span>
+            </div>
+            <dl class="grid grid-cols-[6.5rem_1fr] gap-x-4 gap-y-2.5 p-5 font-mono text-[0.8rem] leading-snug">
+              {
+                spec.map(([key, value]) => (
+                  <>
+                    <dt class="text-[var(--color-mist)]">{key}</dt>
+                    <dd class="text-white">{value}</dd>
+                  </>
+                ))
+              }
+              <dt class="text-[var(--color-mist)]">status</dt>
+              <dd class="flex items-center gap-2 text-[#5ee3ac]">
+                <span class="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true"></span>
+                {person.availability.enabled ? person.availability.label.toLowerCase() : 'building'}
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: story, principles, direction -->
+      <div class="lg:col-span-6 lg:col-start-7">
+        <div class="space-y-6 text-lg leading-relaxed text-[var(--color-ink-2)] md:text-xl md:leading-relaxed">
+          {
+            about.paragraphs.map((p, i) => (
+              <p data-reveal data-reveal-delay={String(i * 80)} class:list={[i === 0 && 'text-[var(--color-ink)] first-line-lead']}>
+                {p}
+              </p>
+            ))
+          }
+        </div>
+
+        <h3 class="label mt-16 mb-6 text-[var(--color-ink-3)]" data-reveal>How I approach problems</h3>
+        <ol class="border-t border-[var(--color-line)]">
+          {
+            about.principles.map((principle, i) => (
+              <li
+                class="principle group grid grid-cols-[3rem_1fr] gap-4 border-b border-[var(--color-line)] py-6 md:grid-cols-[4rem_1fr_1.3fr] md:gap-6"
+                data-reveal
+                data-reveal-delay={String(i * 80)}
+              >
+                <span class="label pt-1.5 text-[var(--color-accent)]">{pad(i + 1)}</span>
+                <span class="font-display text-xl font-semibold tracking-tight md:text-2xl">{principle.title}</span>
+                <span class="col-start-2 leading-relaxed text-[var(--color-ink-2)] md:col-start-auto">{principle.text}</span>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="direction mt-12 flex items-start gap-4 rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-paper)] p-6" data-reveal>
+          <span class="mt-1 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent)] text-white">
+            <ArrowRight size={16} aria-hidden="true" />
+          </span>
+          <span class="leading-relaxed">
+            <span class="label mb-1 block text-[var(--color-ink-3)]">Direction</span>
+            {about.direction}
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .whoami {
+    background: var(--color-night);
+    box-shadow: 0 30px 60px -30px rgb(12 14 19 / 0.45);
+  }
+  .principle {
+    transition: background-color 0.3s;
+  }
+</style>

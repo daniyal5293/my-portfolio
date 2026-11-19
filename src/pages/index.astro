@@ -1,0 +1,48 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/sections/Hero.astro';
+import Highlights from '@/components/sections/Highlights.astro';
+import Projects from '@/components/sections/Projects.astro';
+import About from '@/components/sections/About.astro';
+import Skills from '@/components/sections/Skills.astro';
+import Experience from '@/components/sections/Experience.astro';
+import Education from '@/components/sections/Education.astro';
+import Achievements from '@/components/sections/Achievements.astro';
+import Process from '@/components/sections/Process.astro';
+import Testimonials from '@/components/sections/Testimonials.astro';
+import Contact from '@/components/sections/Contact.astro';
+import { achievements, education, experience, processSteps, testimonials } from '@/data/portfolio';
+import { pad } from '@/utils/text';
+
+/**
+ * Section numbers are assigned in order, skipping sections that are hidden
+ * because they have no content — so the (01)…(n) labels never have gaps.
+ */
+const order = [
+  ['work', true],
+  ['about', true],
+  ['skills', true],
+  ['experience', experience.length > 0],
+  ['education', education.length > 0],
+  ['achievements', achievements.length > 0],
+  ['process', processSteps.length > 0],
+  ['testimonials', testimonials.length > 0],
+  ['contact', true],
+] as const;
+const n: Record<string, string> = {};
+order.filter(([, visible]) => visible).forEach(([id], i) => (n[id] = pad(i + 1)));
+---
+
+<BaseLayout>
+  <Hero />
+  <Highlights />
+  <Projects index={n.work} />
+  <About index={n.about} />
+  <Skills index={n.skills} />
+  <Experience index={n.experience} />
+  <Education index={n.education} />
+  <Achievements index={n.achievements} />
+  <Process index={n.process} />
+  <Testimonials index={n.testimonials ?? ''} />
+  <Contact index={n.contact} />
+</BaseLayout>

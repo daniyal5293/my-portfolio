@@ -1,0 +1,85 @@
+---
+/**
+ * Layered architecture diagram drawn from `caseStudy.architecture`.
+ * Layers stack top-to-bottom with connectors; an optional envelope
+ * (e.g. "Docker Compose") wraps them.
+ */
+import type { Project } from '@/data/portfolio';
+import { pad } from '@/utils/text';
+
+interface Props {
+  architecture: Project['caseStudy']['architecture'];
+}
+const { architecture } = Astro.props;
+---
+
+<figure class="arch">
+  <div class:list={['arch-frame relative rounded-[var(--radius-lg)] p-4 md:p-6', architecture.envelope && 'arch-frame--envelope']}>
+    {
+      architecture.envelope && (
+        <span class="label envelope-tag absolute -top-3 left-6 rounded-full px-3 py-1">{architecture.envelope}</span>
+      )
+    }
+    <ol class="flex flex-col">
+      {
+        architecture.layers.map((layer, i) => (
+          <li class="arch-layer relative" data-reveal data-reveal-delay={String(i * 70)}>
+            {i > 0 && <span class="arch-connector" aria-hidden="true" />}
+            <div class="arch-slab grid grid-cols-[5.5rem_1fr] items-center gap-4 rounded-[var(--radius-sm)] px-4 py-4 sm:grid-cols-[8rem_1fr] md:px-6">
+              <span class="label text-[var(--color-ink-3)]">
+                <span class="text-[var(--color-accent)]">L{pad(i + 1)}</span> {layer.label}
+              </span>
+              <span class="flex flex-wrap gap-2">
+                {layer.items.map((item) => (
+                  <span class="arch-node rounded-md px-3 py-1.5 font-mono text-[0.8rem]">{item}</span>
+                ))}
+              </span>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <figcaption class="label mt-4 text-[var(--color-ink-3)]">Fig. — {architecture.caption}</figcaption>
+</figure>
+
+<style>
+  .arch-frame {
+    background: var(--color-paper);
+    border: 1px solid var(--color-line);
+  }
+  .arch-frame--envelope {
+    border: 1.5px dashed var(--color-accent);
+    background:
+      repeating-linear-gradient(-45deg, rgb(43 61 255 / 0.03) 0 10px, transparent 10px 20px),
+      var(--color-paper);
+    margin-top: 0.75rem;
+  }
+  .envelope-tag {
+    background: var(--color-accent);
+    color: #fff;
+  }
+  .arch-slab {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    box-shadow: 0 1px 0 rgb(12 14 19 / 0.04);
+    transition:
+      border-color 0.3s,
+      transform 0.5s var(--ease-out-expo);
+  }
+  .arch-layer:hover .arch-slab {
+    border-color: var(--color-accent);
+    transform: translateX(4px);
+  }
+  .arch-connector {
+    display: block;
+    width: 1px;
+    height: 1.25rem;
+    margin-left: 2.75rem;
+    background: repeating-linear-gradient(180deg, var(--color-accent) 0 3px, transparent 3px 6px);
+  }
+  .arch-node {
+    background: var(--color-paper-2);
+    border: 1px solid var(--color-line);
+  }
+</style>

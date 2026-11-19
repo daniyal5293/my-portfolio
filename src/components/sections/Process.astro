@@ -1,0 +1,43 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import ProcessPipeline from './ProcessPipeline';
+import { processSteps } from '@/data/portfolio';
+
+interface Props {
+  index: string;
+}
+const { index } = Astro.props;
+---
+
+{
+  processSteps.length > 0 && (
+    <section
+      id="process"
+      class="on-dark section-y relative overflow-hidden bg-[var(--color-night)] text-white"
+      aria-labelledby="process-title"
+      data-nav-section="process"
+    >
+      <div class="bg-grid-dark pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div class="process-glow pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div class="container-x relative">
+        <SectionHeading index={index} label="How I work" id="process-title" title="From problem to" accent="production" tone="dark" align="split">
+          The same pipeline every time — understand it, plan it, design it, build it, prove it, ship it.
+        </SectionHeading>
+        <div data-reveal>
+          <ProcessPipeline client:visible steps={processSteps} />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .process-glow {
+    background:
+      radial-gradient(50% 40% at 80% 0%, rgb(43 61 255 / 0.28), transparent 70%),
+      radial-gradient(40% 30% at 0% 100%, rgb(255 90 31 / 0.1), transparent 70%);
+  }
+  :global(#process .serif-accent) {
+    color: #9aa5ff;
+  }
+</style>

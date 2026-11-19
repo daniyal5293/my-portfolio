@@ -1,0 +1,260 @@
+---
+import { ArrowUpRight } from 'lucide-react';
+import Logo from '@/components/ui/Logo.astro';
+import { navItems, person } from '@/data/portfolio';
+
+interface Props {
+  navBase?: string;
+}
+const { navBase = '' } = Astro.props;
+const links = navItems.filter((item) => item.id !== 'contact');
+---
+
+<header class="site-header fixed inset-x-0 top-0 z-50" data-header>
+  <div class="scroll-progress absolute inset-x-0 top-0 h-[2px] bg-[var(--color-accent)]" data-scroll-progress></div>
+
+  <div class="container-x flex h-[var(--header-h)] items-center justify-between gap-6">
+    <a href={navBase || '#top'} class="relative z-[2] rounded-md" aria-label={`${person.name} — home`}>
+      <Logo />
+    </a>
+
+    <nav aria-label="Primary" class="hidden lg:block">
+      <ul class="nav-pill relative flex items-center gap-1 rounded-full p-1">
+        <span class="nav-indicator" aria-hidden="true" data-nav-indicator></span>
+        {
+          links.map((item) => (
+            <li>
+              <a
+                href={`${navBase}#${item.id}`}
+                class="nav-link relative z-[1] block rounded-full px-4 py-2 text-sm font-medium"
+                data-nav-link={item.id}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href={`${navBase}#contact`} class="btn hidden !min-h-10 !py-2.5 !text-sm sm:inline-flex" data-magnetic="0.2">
+        Let’s talk
+        <ArrowUpRight size={16} aria-hidden="true" className="btn-icon" />
+      </a>
+
+      <button
+        type="button"
+        class="menu-toggle relative z-[2] inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface)] lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        data-menu-toggle
+      >
+        <span class="sr-only" data-menu-label>Open menu</span>
+        <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu lg:hidden" data-menu hidden>
+    <nav aria-label="Mobile" class="container-x flex h-full flex-col justify-between pt-[calc(var(--header-h)+2rem)] pb-10">
+      <ul class="flex flex-col">
+        {
+          navItems.map((item, i) => (
+            <li class="mobile-item border-b border-[var(--color-line)]" style={`--i:${i}`}>
+              <a
+                href={`${navBase}#${item.id}`}
+                class="flex items-baseline justify-between py-4 font-display text-[clamp(2rem,9vw,3rem)] font-semibold tracking-tight"
+                data-menu-link
+                data-nav-link={item.id}
+              >
+                {item.label}
+                <span class="label text-[var(--color-ink-3)]">0{i + 1}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="label text-[var(--color-ink-3)]">
+        {person.location} · <a class="link-underline text-[var(--color-ink)]" href={`mailto:${person.email}`}>{person.email}</a>
+      </p>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    transition:
+      background-color var(--dur-base) var(--ease-out-expo),
+      border-color var(--dur-base) var(--ease-out-expo),
+      backdrop-filter var(--dur-base);
+    border-bottom: 1px solid transparent;
+  }
+  .site-header[data-scrolled='true'] {
+    background: rgb(242 240 235 / 0.78);
+    backdrop-filter: saturate(1.4) blur(14px);
+    -webkit-backdrop-filter: saturate(1.4) blur(14px);
+    border-bottom-color: var(--color-line);
+  }
+  .site-header[data-menu-open='true'] {
+    background: var(--color-paper);
+  }
+
+  .nav-pill {
+    background: rgb(251 250 247 / 0.7);
+    border: 1px solid var(--color-line);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .nav-link {
+    color: var(--color-ink-2);
+    transition: color var(--dur-fast);
+  }
+  .nav-link:hover,
+  .nav-link[aria-current='true'] {
+    color: var(--color-ink);
+  }
+  .nav-indicator {
+    position: absolute;
+    top: 0.25rem;
+    left: 0;
+    height: calc(100% - 0.5rem);
+    width: var(--w, 0px);
+    transform: translateX(var(--x, 0px));
+    border-radius: 999px;
+    background: #fff;
+    box-shadow:
+      0 1px 2px rgb(12 14 19 / 0.08),
+      0 0 0 1px rgb(12 14 19 / 0.06);
+    opacity: var(--o, 0);
+    transition:
+      transform 0.5s var(--ease-out-expo),
+      width 0.5s var(--ease-out-expo),
+      opacity 0.3s;
+  }
+
+  .menu-icon {
+    position: relative;
+    width: 18px;
+    height: 10px;
+  }
+  .menu-icon span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.6px;
+    background: var(--color-ink);
+    border-radius: 2px;
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+  .menu-icon span:first-child {
+    top: 0;
+  }
+  .menu-icon span:last-child {
+    bottom: 0;
+  }
+  [aria-expanded='true'] .menu-icon span:first-child {
+    transform: translateY(4.2px) rotate(45deg);
+  }
+  [aria-expanded='true'] .menu-icon span:last-child {
+    transform: translateY(-4.2px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: var(--color-paper);
+    overflow-y: auto;
+  }
+  .mobile-menu:not([hidden]) .mobile-item {
+    animation: fade-up 0.7s var(--ease-out-expo) both;
+    animation-delay: calc(var(--i) * 45ms + 60ms);
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]')!;
+  const toggle = header.querySelector<HTMLButtonElement>('[data-menu-toggle]')!;
+  const label = header.querySelector<HTMLElement>('[data-menu-label]')!;
+  const menu = header.querySelector<HTMLElement>('[data-menu]')!;
+
+  /* ── Background transition on scroll ── */
+  const onScroll = () => {
+    header.dataset.scrolled = String(window.scrollY > 24);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ── Mobile menu ── */
+  const setMenu = (open: boolean) => {
+    toggle.setAttribute('aria-expanded', String(open));
+    label.textContent = open ? 'Close menu' : 'Open menu';
+    menu.hidden = !open;
+    header.dataset.menuOpen = String(open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) menu.querySelector<HTMLElement>('a')?.focus();
+  };
+  toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  menu.querySelectorAll('[data-menu-link]').forEach((link) => link.addEventListener('click', () => setMenu(false)));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !menu.hidden) {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+  // Keep keyboard focus inside the open menu (toggle + links).
+  menu.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    const items = [...menu.querySelectorAll<HTMLElement>('a')];
+    const last = items[items.length - 1];
+    if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      toggle.focus();
+    }
+  });
+  window.matchMedia('(min-width: 64rem)').addEventListener('change', (e) => e.matches && setMenu(false));
+
+  /* ── Active-section indicator ── */
+  const indicator = header.querySelector<HTMLElement>('[data-nav-indicator]');
+  const desktopLinks = [...header.querySelectorAll<HTMLAnchorElement>('nav[aria-label="Primary"] [data-nav-link]')];
+  const allLinks = [...header.querySelectorAll<HTMLAnchorElement>('[data-nav-link]')];
+  // Sections opt in with data-nav-section="<nav id>" (several may share one id).
+  const sections = [...document.querySelectorAll<HTMLElement>('[data-nav-section]')];
+
+  let currentId: string | null = null;
+  window.addEventListener('resize', () => moveIndicator(currentId), { passive: true });
+
+  const moveIndicator = (id: string | null) => {
+    currentId = id;
+    allLinks.forEach((link) => link.setAttribute('aria-current', String(link.dataset.navLink === id)));
+    if (!indicator) return;
+    const active = desktopLinks.find((l) => l.dataset.navLink === id);
+    if (!active) {
+      indicator.style.setProperty('--o', '0');
+      return;
+    }
+    indicator.style.setProperty('--o', '1');
+    indicator.style.setProperty('--x', `${active.offsetLeft}px`);
+    indicator.style.setProperty('--w', `${active.offsetWidth}px`);
+  };
+
+  if (sections.length && 'IntersectionObserver' in window) {
+    // A thin band ~40% down the viewport decides which section is "current".
+    const inBand = new Set<HTMLElement>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const el = entry.target as HTMLElement;
+          if (entry.isIntersecting) inBand.add(el);
+          else inBand.delete(el);
+        });
+        const current = sections.find((section) => inBand.has(section));
+        moveIndicator(current?.dataset.navSection ?? null);
+      },
+      { rootMargin: '-40% 0px -59% 0px', threshold: 0 },
+    );
+    sections.forEach((section) => observer.observe(section));
+  }
+</script>

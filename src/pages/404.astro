@@ -1,0 +1,43 @@
+---
+import { ArrowLeft } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { projects } from '@/data/portfolio';
+---
+
+<BaseLayout title="Page not found" description="This page does not exist." navBase="/" noindex>
+  <section class="relative isolate flex min-h-[100svh] items-center overflow-hidden pt-[var(--header-h)]">
+    <div class="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-70" aria-hidden="true"></div>
+    <div class="container-x py-20">
+      <p class="label text-[var(--color-ink-3)]">Error 404 · route not found</p>
+      <h1 class="mt-6 text-[clamp(6rem,24vw,18rem)] leading-[0.8] font-bold tracking-[-0.06em]">
+        4<span class="serif-accent font-normal text-[var(--color-accent)]">0</span>4
+      </h1>
+      <p class="mt-8 max-w-lg font-display text-2xl leading-snug font-medium tracking-tight md:text-3xl">
+        This container never got scheduled. The page you’re after doesn’t exist — or it moved.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/" class="btn">
+          <ArrowLeft size={17} aria-hidden="true" />
+          Back to home
+        </a>
+        <a href="/#work" class="btn btn-outline">See selected work</a>
+      </div>
+
+      <div class="mt-16 max-w-xl border-t border-[var(--color-line)] pt-6">
+        <p class="label mb-4 text-[var(--color-ink-3)]">Case studies</p>
+        <ul class="flex flex-wrap gap-x-6 gap-y-2">
+          {
+            projects.map((p) => (
+              <li>
+                <a href={`/projects/${p.slug}/`} class="link-underline font-medium">
+                  {p.title}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,170 @@
+---
+import { ArrowDown, ArrowUpRight, Download } from 'lucide-react';
+import HeroStage from '@/components/3d/HeroStage';
+import { cv, person } from '@/data/portfolio';
+import { cvExists } from '@/utils/files';
+import { splitAccent } from '@/utils/text';
+
+const headline = splitAccent(person.headline);
+const hasCv = cvExists(cv.href);
+---
+
+<section id="top" class="hero hero-ready relative isolate overflow-hidden" aria-labelledby="hero-title">
+  <!-- Background: engineering grid fading out toward the edges -->
+  <div class="hero-grid bg-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+
+  <!-- 3D stage -->
+  <div class="hero-stage absolute z-0">
+    <HeroStage client:load eventSourceId="top" />
+  </div>
+
+  <div class="hero-content container-x relative z-10 flex min-h-[100svh] flex-col pointer-events-none">
+    <!-- Top technical row -->
+    <div
+      class="hero-meta mt-[calc(var(--header-h)+1.25rem)] hidden items-start justify-between gap-6 text-[var(--color-ink-3)] md:flex"
+      data-hero-fade
+      style="--line-delay:500"
+    >
+      <p class="label">SYS/01 — Portfolio · {new Date().getFullYear()}</p>
+      <p class="label text-right">
+        Fig. 01 — Orchestration core<br /><span class="opacity-70">Control plane · pods · packets</span>
+      </p>
+    </div>
+
+    <div class="hero-body flex flex-1 flex-col justify-end pb-10 md:justify-center md:py-8">
+      <div class="max-w-[68rem]">
+        <div class="mb-6 flex flex-wrap items-center gap-3" data-hero-fade style="--line-delay:0">
+          {
+            person.availability.enabled && (
+              <span class="status-pill inline-flex items-center gap-2 rounded-full border border-[var(--color-line)] bg-[var(--color-surface)]/80 py-1.5 pr-3.5 pl-2.5 text-sm font-medium backdrop-blur">
+                <span class="h-2 w-2 animate-pulse-dot rounded-full bg-[var(--color-mint)]" aria-hidden="true" />
+                {person.availability.label}
+              </span>
+            )
+          }
+          <span class="label text-[var(--color-ink-2)]">{person.role}</span>
+        </div>
+
+        <h1 id="hero-title" class="text-display-xl font-bold">
+          <span class="line-mask" style="--line-delay:60"><span>{person.firstName}</span></span>
+          <span class="line-mask" style="--line-delay:160">
+            <span class="hero-lastname">{person.lastName}<span class="text-[var(--color-accent)]">.</span></span>
+          </span>
+        </h1>
+
+        <div class="mt-7 flex max-w-[36rem] flex-col gap-7 md:mt-9">
+          <div data-hero-fade style="--line-delay:320">
+            <p class="font-display text-[clamp(1.35rem,2.4vw,1.9rem)] leading-[1.18] font-medium tracking-tight">
+              {
+                headline.map((part) =>
+                  part.accent ? (
+                    <span class="serif-accent text-[1.12em] text-[var(--color-accent)]">{part.text}</span>
+                  ) : (
+                    part.text
+                  ),
+                )
+              }
+            </p>
+            <p class="mt-4 max-w-[32rem] leading-relaxed text-[var(--color-ink-2)]">{person.intro}</p>
+          </div>
+
+          <div class="pointer-events-auto flex flex-wrap gap-3" data-hero-fade style="--line-delay:440">
+            <a href="#work" class="btn" data-magnetic="0.2">
+              Explore my work
+              <ArrowDown size={17} aria-hidden="true" className="btn-icon btn-icon-down" />
+            </a>
+            {
+              hasCv && (
+                <a href={cv.href} download={cv.downloadName} class="btn btn-outline" data-magnetic="0.2">
+                  Download CV
+                  <Download size={16} aria-hidden="true" className="btn-icon btn-icon-down" />
+                  <span class="sr-only">(PDF)</span>
+                </a>
+              )
+            }
+            <a href="#contact" class="btn btn-outline" data-magnetic="0.2">
+              Contact me
+              <ArrowUpRight size={17} aria-hidden="true" className="btn-icon" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom technical row + scroll cue -->
+    <div
+      class="hero-foot flex items-end justify-between gap-6 border-t border-[var(--color-line)] py-5 text-[var(--color-ink-3)]"
+      data-hero-fade
+      style="--line-delay:600"
+    >
+      <a href="#highlights" class="pointer-events-auto group flex items-center gap-3 rounded-md">
+        <span class="relative block h-9 w-px overflow-hidden bg-[var(--color-line)]" aria-hidden="true">
+          <span class="absolute inset-0 animate-scroll-cue bg-[var(--color-ink)]"></span>
+        </span>
+        <span class="label group-hover:text-[var(--color-ink)]">Scroll to explore</span>
+      </a>
+      <p class="label hidden sm:block">{person.location} — {person.coordinates}</p>
+      <p class="label hidden lg:block">Stack: TypeScript / Docker / AWS</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100svh;
+  }
+  .hero-grid {
+    mask-image: radial-gradient(ellipse 80% 70% at 65% 45%, #000 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 65% 45%, #000 20%, transparent 75%);
+  }
+
+  /* Mobile: scene sits in the upper half, text below it. */
+  .hero-stage {
+    inset: var(--header-h) 0 auto 0;
+    height: 42svh;
+  }
+  @media (min-width: 768px) {
+    .hero-stage {
+      inset: 0 0 0 auto;
+      width: 64%;
+      height: 100%;
+    }
+  }
+  @media (min-width: 1280px) {
+    .hero-stage {
+      width: 60%;
+    }
+  }
+
+  /* Gentle parallax as the hero scrolls away (scroll-driven, CSS only). */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .hero-stage {
+        animation: hero-drift linear both;
+        animation-timeline: view();
+        animation-range: exit 0% exit 100%;
+      }
+      @keyframes hero-drift {
+        to {
+          transform: translate3d(0, 18%, 0) scale(0.94);
+          opacity: 0.2;
+        }
+      }
+    }
+  }
+
+  .hero-lastname {
+    /* Ink-to-ink-2 for subtle depth on the long second line */
+    background: linear-gradient(100deg, var(--color-ink) 40%, #2b3046 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-right: 0.05em;
+  }
+
+  @media (max-width: 767px) {
+    .hero-body {
+      padding-top: calc(var(--header-h) + 42svh);
+    }
+  }
+</style>

@@ -1,0 +1,143 @@
+---
+import { ArrowUpRight, Copy, Check, Download } from 'lucide-react';
+import BrandIcon from '@/components/ui/BrandIcon.astro';
+import { cv, person, socials } from '@/data/portfolio';
+import { cvExists } from '@/utils/files';
+
+interface Props {
+  index: string;
+}
+const { index } = Astro.props;
+const hasCv = cvExists(cv.href);
+const profiles = socials.filter((s) => s.id !== 'email');
+---
+
+<section
+  id="contact"
+  class="contact on-accent relative overflow-hidden text-white"
+  aria-labelledby="contact-title"
+  data-nav-section="contact"
+>
+  <div class="contact-bg pointer-events-none absolute inset-0" aria-hidden="true"></div>
+  <div class="bg-grid-dark pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+
+  <div class="container-x relative section-y">
+    <p class="section-index label mb-8 !text-white/70" data-reveal="fade">
+      <span>({index})</span><span class="sr-only"> — </span><span class="order-2">Contact</span>
+    </p>
+
+    <h2 id="contact-title" class="max-w-[14ch] text-[clamp(3rem,9vw,8.5rem)] leading-[0.9] font-bold" data-reveal>
+      Let’s build something <span class="serif-accent font-normal text-[#ffd8c9]">that ships.</span>
+    </h2>
+
+    <div class="mt-14 grid gap-12 lg:mt-20 lg:grid-cols-12 lg:items-end">
+      <div class="lg:col-span-7" data-reveal>
+        <p class="max-w-xl text-lg leading-relaxed text-white/80 md:text-xl">
+          Internships, graduate roles, freelance builds or a conversation about containers and cloud — my inbox is open.
+        </p>
+
+        <!-- Email: direct mailto + copy -->
+        <div class="email-row mt-10 flex flex-col gap-4 border-y border-white/25 py-6 sm:flex-row sm:items-center sm:justify-between">
+          <a
+            href={`mailto:${person.email}`}
+            class="email-link group inline-flex min-w-0 items-center gap-3 font-display text-[clamp(1.2rem,3.2vw,2.4rem)] font-semibold tracking-tight"
+          >
+            <span class="truncate">{person.email}</span>
+            <ArrowUpRight size={28} aria-hidden="true" className="shrink-0 transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </a>
+          <button
+            type="button"
+            class="copy-btn btn btn-ghost-light shrink-0 self-start sm:self-auto"
+            data-copy={person.email}
+          >
+            <span class="copy-icon" aria-hidden="true"><Copy size={16} /></span>
+            <span class="copied-icon" aria-hidden="true"><Check size={16} /></span>
+            <span aria-live="polite" data-copy-status>Copy email</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 lg:col-start-9" data-reveal data-reveal-delay="120">
+        <p class="label mb-4 text-white/70">Elsewhere</p>
+        <ul class="divide-y divide-white/20 border-y border-white/20">
+          {
+            profiles.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  {...(s.id !== 'phone' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  class="social-row group flex items-center justify-between gap-4 py-4"
+                >
+                  <span class="flex items-center gap-3">
+                    <BrandIcon name={s.id} size={20} />
+                    <span class="font-medium">{s.label}</span>
+                  </span>
+                  <span class="flex items-center gap-2 text-sm text-white/70 group-hover:text-white">
+                    {s.handle}
+                    <ArrowUpRight size={16} aria-hidden="true" className="transition-transform duration-500 group-hover:rotate-45" />
+                  </span>
+                  {s.id !== 'phone' && <span class="sr-only">(opens in a new tab)</span>}
+                </a>
+              </li>
+            ))
+          }
+          {
+            hasCv && (
+              <li>
+                <a href={cv.href} download={cv.downloadName} class="social-row group flex items-center justify-between gap-4 py-4">
+                  <span class="flex items-center gap-3">
+                    <Download size={20} aria-hidden="true" />
+                    <span class="font-medium">Résumé</span>
+                  </span>
+                  <span class="text-sm text-white/70 group-hover:text-white">PDF</span>
+                </a>
+              </li>
+            )
+          }
+        </ul>
+        <p class="label mt-6 text-white/70">{person.location} · {person.coordinates}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--color-accent);
+  }
+  .contact-bg {
+    background:
+      radial-gradient(60% 70% at 100% 0%, rgb(255 255 255 / 0.16), transparent 60%),
+      radial-gradient(50% 60% at 0% 100%, rgb(255 90 31 / 0.35), transparent 65%),
+      linear-gradient(180deg, transparent, rgb(11 13 20 / 0.25));
+  }
+  .section-index::after {
+    order: 1;
+  }
+  .email-link span {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 2px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 0.6s var(--ease-out-expo);
+  }
+  .email-link:hover span,
+  .email-link:focus-visible span {
+    background-size: 100% 2px;
+  }
+  .copied-icon {
+    display: none;
+  }
+  .copy-btn[data-copied='true'] .copy-icon {
+    display: none;
+  }
+  .copy-btn[data-copied='true'] .copied-icon {
+    display: inline;
+  }
+  .social-row {
+    transition: padding 0.5s var(--ease-out-expo);
+  }
+  .social-row:hover {
+    padding-inline: 0.5rem;
+  }
+</style>

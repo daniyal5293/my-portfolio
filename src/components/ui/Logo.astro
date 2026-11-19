@@ -1,0 +1,40 @@
+---
+/** Personal monogram: a "container" square with the initials. */
+import { person } from '@/data/portfolio';
+
+interface Props {
+  class?: string;
+  tone?: 'ink' | 'light';
+}
+const { class: className, tone = 'ink' } = Astro.props;
+---
+
+<span class:list={['inline-flex items-center gap-3', className]}>
+  <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true" class="shrink-0">
+    <rect
+      x="1"
+      y="1"
+      width="32"
+      height="32"
+      rx="9"
+      fill={tone === 'ink' ? 'var(--color-ink)' : '#fff'}
+    />
+    <rect x="5.5" y="5.5" width="23" height="23" rx="5.5" fill="none" stroke="var(--color-accent)" stroke-width="1.4"
+    ></rect>
+    <text
+      x="17"
+      y="21.6"
+      text-anchor="middle"
+      font-family="var(--font-display)"
+      font-size="13"
+      font-weight="700"
+      letter-spacing="-0.5"
+      fill={tone === 'ink' ? '#fff' : 'var(--color-ink)'}>{person.initials}</text
+    >
+    <circle cx="27.5" cy="6.5" r="2.4" fill="var(--color-signal)"></circle>
+  </svg>
+  <span class="flex flex-col leading-none">
+    <span class="font-display text-[0.98rem] font-semibold tracking-tight">{person.firstName}</span>
+    <span class="label mt-1 text-[0.6rem] opacity-60">{person.role.split(' ')[0]} · Cloud</span>
+  </span>
+</span>

@@ -1,0 +1,109 @@
+---
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { education } from '@/data/portfolio';
+
+interface Props {
+  index: string;
+}
+const { index } = Astro.props;
+
+/** "Aug 2023 – Jun 2027" → ["2023", "2027"] for the large year display. */
+const years = (period: string) => period.match(/\d{4}/g) ?? [];
+---
+
+{
+  education.length > 0 && (
+    <section
+      id="education"
+      class="section-y relative"
+      aria-labelledby="education-title"
+      data-nav-section="experience"
+    >
+      <div class="container-x">
+        <SectionHeading index={index} label="Education" id="education-title" title="Foundations," accent="formally" />
+
+        <ol class="border-t border-[var(--color-line-strong)]">
+          {education.map((item, i) => {
+            const [from, to] = years(item.period);
+            return (
+              <li
+                class="edu-row group grid gap-6 border-b border-[var(--color-line-strong)] py-10 md:grid-cols-12 md:gap-10 md:py-14"
+                data-reveal
+                data-reveal-delay={String(i * 90)}
+              >
+                <p
+                  class="edu-years font-display text-[clamp(2.4rem,5vw,4.25rem)] leading-none font-semibold tracking-[-0.05em] md:col-span-4"
+                  aria-label={item.period}
+                >
+                  <span>{from}</span>
+                  {to && (
+                    <>
+                      <span class="mx-2 text-[var(--color-ink-3)]" aria-hidden="true">
+                        —
+                      </span>
+                      <span class="edu-to">{to}</span>
+                    </>
+                  )}
+                </p>
+
+                <div class="md:col-span-5">
+                  <h3 class="text-2xl font-semibold md:text-3xl">{item.degree}</h3>
+                  <p class="mt-2 text-lg text-[var(--color-ink-2)]">
+                    {item.institution}
+                    {item.shortName && <span class="text-[var(--color-ink-3)]"> ({item.shortName})</span>}
+                  </p>
+                  <p class="label mt-4 text-[var(--color-ink-3)]">
+                    {item.period} · {item.location}
+                  </p>
+                  {item.coursework.length > 0 && (
+                    <div class="mt-6">
+                      <h4 class="label mb-3 text-[var(--color-ink-3)]">Relevant coursework</h4>
+                      <ul class="flex flex-wrap gap-1.5">
+                        {item.coursework.map((c) => (
+                          <li class="chip">{c}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                <div class="flex flex-wrap items-start gap-2 md:col-span-3 md:flex-col md:items-end">
+                  {item.status && (
+                    <span
+                      class:list={[
+                        'label rounded-full border px-3 py-1.5',
+                        item.status === 'In progress'
+                          ? 'border-[var(--color-accent)] text-[var(--color-accent)]'
+                          : 'border-[var(--color-line-strong)] text-[var(--color-ink-2)]',
+                      ]}
+                    >
+                      {item.status}
+                    </span>
+                  )}
+                  {item.achievements.map((a) => (
+                    <span class="font-display text-2xl font-semibold tracking-tight md:mt-3">{a}</span>
+                  ))}
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .edu-to {
+    color: transparent;
+    -webkit-text-stroke: 1.2px var(--color-ink);
+  }
+  .edu-row {
+    transition: background-color 0.4s;
+  }
+  .edu-row:hover .edu-to {
+    color: var(--color-accent);
+    -webkit-text-stroke-color: var(--color-accent);
+    transition: color 0.5s var(--ease-out-expo);
+  }
+</style>

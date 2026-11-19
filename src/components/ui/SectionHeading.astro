@@ -1,0 +1,69 @@
+---
+/**
+ * Editorial section header:  (04) ——  LABEL
+ *                            Big display title with a serif accent
+ * Pass the accent word via the `accent` slot or `accent` prop.
+ */
+interface Props {
+  index: string;
+  label: string;
+  title: string;
+  accent?: string;
+  /** Text after the accent word. */
+  tail?: string;
+  id?: string;
+  tone?: 'light' | 'dark';
+  class?: string;
+  align?: 'left' | 'split';
+}
+
+const { index, label, title, accent, tail, id, tone = 'light', class: className, align = 'left' } = Astro.props;
+---
+
+<header
+  class:list={[
+    'mb-12 md:mb-20',
+    align === 'split' && 'grid gap-8 md:grid-cols-12 md:items-end',
+    className,
+  ]}
+>
+  <div class:list={[align === 'split' && 'md:col-span-7']}>
+    <p
+      class:list={['section-index label mb-6', tone === 'dark' && 'text-[var(--color-mist)]']}
+      data-reveal="fade"
+    >
+      <span>({index})</span>
+      <span class="sr-only"> — </span>
+      <span class="order-last">{label}</span>
+    </p>
+    <h2 id={id} class="text-display-lg font-semibold" data-reveal>
+      {title}{' '}
+      {accent && <span class="serif-accent text-[var(--color-accent)]">{accent}</span>}
+      {tail && <span> {tail}</span>}
+    </h2>
+  </div>
+  {
+    Astro.slots.has('default') && (
+      <div
+        class:list={[
+          'mt-6 max-w-xl text-lg leading-relaxed',
+          align === 'split' && 'md:col-span-5 md:mt-0 md:justify-self-end',
+          tone === 'dark' ? 'text-[var(--color-mist)]' : 'text-[var(--color-ink-2)]',
+        ]}
+        data-reveal
+        data-reveal-delay="120"
+      >
+        <slot />
+      </div>
+    )
+  }
+</header>
+
+<style>
+  .section-index::after {
+    order: 1;
+  }
+  .section-index > span:last-child {
+    order: 2;
+  }
+</style>

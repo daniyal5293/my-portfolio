@@ -1,0 +1,197 @@
+---
+import { Award } from 'lucide-react';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
+import { experience } from '@/data/portfolio';
+import { pad } from '@/utils/text';
+
+interface Props {
+  index: string;
+}
+const { index } = Astro.props;
+---
+
+{
+  experience.length > 0 && (
+    <section
+      id="experience"
+      class="section-y relative bg-[var(--color-surface)]"
+      aria-labelledby="experience-title"
+      data-nav-section="experience"
+    >
+      <div class="container-x">
+        <SectionHeading index={index} label="Experience" id="experience-title" title="Where I’ve" accent="shipped" tail="so far">
+          Internships across software engineering and cloud computing.
+        </SectionHeading>
+
+        <ol class="timeline relative">
+          <span class="timeline-track" aria-hidden="true">
+            <span class="timeline-fill" />
+          </span>
+
+          {experience.map((job, i) => (
+            <li class="timeline-item relative grid gap-6 pb-16 pl-12 last:pb-0 md:grid-cols-12 md:gap-10 md:pl-0" data-reveal>
+              <span class="timeline-node" aria-hidden="true">
+                <span />
+              </span>
+
+              <div class="md:col-span-4 md:pr-14 md:text-right">
+                <p class="label text-[var(--color-accent)]">
+                  {pad(i + 1)} / {job.type}
+                </p>
+                <p class="mt-3 font-display text-[clamp(2rem,4vw,3.25rem)] leading-none font-semibold tracking-tight">
+                  {job.organization}
+                </p>
+                {(job.period || job.location) && (
+                  <p class="label mt-4 text-[var(--color-ink-3)]">
+                    {[job.period, job.location].filter(Boolean).join(' · ')}
+                  </p>
+                )}
+              </div>
+
+              <div class="md:col-span-7 md:col-start-6">
+                <div class="exp-card relative rounded-[var(--radius-lg)] border border-[var(--color-line)] bg-[var(--color-paper)] p-6 md:p-8">
+                  <div class="flex flex-wrap items-start justify-between gap-4">
+                    <h3 class="text-2xl font-semibold md:text-3xl">
+                      <span class="serif-accent text-[1.1em] font-normal">{job.role}</span>
+                    </h3>
+                    {job.badge && (
+                      <span class="badge inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-semibold">
+                        <Award size={15} aria-hidden="true" />
+                        {job.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  {job.summary && <p class="mt-4 leading-relaxed text-[var(--color-ink-2)]">{job.summary}</p>}
+
+                  {job.responsibilities.length > 0 && (
+                    <>
+                      <h4 class="label mt-6 mb-3 text-[var(--color-ink-3)]">Responsibilities</h4>
+                      <ul class="space-y-2">
+                        {job.responsibilities.map((r) => (
+                          <li class="flex gap-3 leading-relaxed text-[var(--color-ink-2)]">
+                            <span class="mt-2.5 h-1 w-3 shrink-0 bg-[var(--color-accent)]" aria-hidden="true" />
+                            {r}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {job.contributions.length > 0 && (
+                    <>
+                      <h4 class="label mt-6 mb-3 text-[var(--color-ink-3)]">Key contributions</h4>
+                      <ul class="space-y-2">
+                        {job.contributions.map((c) => (
+                          <li class="flex gap-3 leading-relaxed text-[var(--color-ink)]">
+                            <span class="mt-2.5 h-1 w-3 shrink-0 bg-[var(--color-signal)]" aria-hidden="true" />
+                            {c}
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {job.technologies.length > 0 && (
+                    <ul class="mt-6 flex flex-wrap gap-1.5" aria-label="Technologies used">
+                      {job.technologies.map((t) => (
+                        <li class="chip">{t}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {job.summary === null && job.responsibilities.length === 0 && job.contributions.length === 0 && (
+                    <p class="mt-4 leading-relaxed text-[var(--color-ink-2)]">
+                      {job.type} — {job.role.toLowerCase()} at {job.organization}.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .timeline-track {
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0;
+    left: 0.6875rem;
+    width: 1px;
+    background: var(--color-line-strong);
+    overflow: hidden;
+  }
+  @media (min-width: 768px) {
+    .timeline-track {
+      /* Centred in the empty 5th column between the label and the card */
+      left: calc((100% - 27.5rem) / 12 * 4.5 + 10rem);
+    }
+  }
+  .timeline-fill {
+    position: absolute;
+    inset: 0;
+    background: var(--color-accent);
+    transform-origin: top;
+    transform: scaleY(1);
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .timeline-fill {
+        animation: draw-line linear both;
+        animation-timeline: view();
+        animation-range: entry 20% cover 60%;
+      }
+      @keyframes draw-line {
+        from {
+          transform: scaleY(0);
+        }
+        to {
+          transform: scaleY(1);
+        }
+      }
+    }
+  }
+  .timeline-node {
+    position: absolute;
+    top: 0.25rem;
+    left: 0;
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 0.45rem;
+    border: 1px solid var(--color-accent);
+    background: var(--color-surface);
+    display: grid;
+    place-items: center;
+    z-index: 1;
+  }
+  .timeline-node span {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 2px;
+    background: var(--color-accent);
+  }
+  @media (min-width: 768px) {
+    .timeline-node {
+      left: calc((100% - 27.5rem) / 12 * 4.5 + 10rem - 0.6875rem);
+    }
+  }
+
+  .badge {
+    background: #fff1ea;
+    color: #b23a0c;
+    border: 1px solid rgb(255 90 31 / 0.35);
+  }
+  .exp-card {
+    transition:
+      border-color 0.4s,
+      transform 0.6s var(--ease-out-expo);
+  }
+  .timeline-item:hover .exp-card {
+    border-color: var(--color-line-strong);
+    transform: translateX(4px);
+  }
+</style>

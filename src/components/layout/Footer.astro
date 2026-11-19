@@ -1,0 +1,136 @@
+---
+import { ArrowUp } from 'lucide-react';
+import BrandIcon from '@/components/ui/BrandIcon.astro';
+import { cv, navItems, person, socials } from '@/data/portfolio';
+import { cvExists } from '@/utils/files';
+
+interface Props {
+  navBase?: string;
+}
+const { navBase = '' } = Astro.props;
+const buildYear = new Date().getFullYear();
+const hasCv = cvExists(cv.href);
+---
+
+<footer class="on-dark relative overflow-hidden bg-[var(--color-night)] text-white">
+  <div class="bg-grid-dark pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+
+  <div class="container-x relative pt-20 pb-8 md:pt-28">
+    <div class="grid gap-14 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <p class="label text-[var(--color-mist)]">Software & Cloud Engineer</p>
+        <p class="mt-5 max-w-sm font-display text-3xl leading-tight font-medium tracking-tight md:text-4xl">
+          Building products — <span class="serif-accent text-[#9aa5ff]">and the cloud</span> they run on.
+        </p>
+      </div>
+
+      <nav aria-label="Footer" class="md:col-span-2 md:col-start-7">
+        <p class="label mb-5 text-[var(--color-mist)]">Index</p>
+        <ul class="space-y-2.5">
+          {
+            navItems.map((item) => (
+              <li>
+                <a href={`${navBase}#${item.id}`} class="link-underline text-white/80 hover:text-white">
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <div class="md:col-span-3">
+        <p class="label mb-5 text-[var(--color-mist)]">Elsewhere</p>
+        <ul class="space-y-2.5">
+          {
+            socials.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  class="group inline-flex items-center gap-3 text-white/80 hover:text-white"
+                  {...(s.id === 'github' || s.id === 'linkedin' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                >
+                  <BrandIcon name={s.id} size={16} class="opacity-70 group-hover:opacity-100" />
+                  <span class="link-underline">{s.label}</span>
+                </a>
+              </li>
+            ))
+          }
+          {
+            hasCv && (
+              <li>
+                <a href={cv.href} download={cv.downloadName} class="link-underline text-white/80 hover:text-white">
+                  Résumé (PDF)
+                </a>
+              </li>
+            )
+          }
+        </ul>
+      </div>
+
+      <div class="md:col-span-1 md:justify-self-end">
+        <a
+          href="#main"
+          class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/25 transition-colors hover:border-white hover:bg-white hover:text-[var(--color-night)]"
+          aria-label="Back to top"
+          data-magnetic="0.3"
+        >
+          <ArrowUp size={18} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+
+    <!-- Final detail: oversized outlined wordmark with an orbiting signal dot -->
+    <div class="footer-mark relative mt-20 select-none md:mt-28" aria-hidden="true">
+      <p class="footer-word font-display font-bold">{person.firstName.toLowerCase()}</p>
+      <span class="footer-orbit"><span></span></span>
+    </div>
+
+    <div
+      class="mt-6 flex flex-col gap-3 border-t border-[var(--color-night-line)] pt-6 text-sm text-[var(--color-mist)] sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© <span data-current-year>{buildYear}</span> {person.name}. All rights reserved.</p>
+      <p class="label">Built with Astro · React Three Fiber · {person.location}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  /* Wordmark is cropped at the baseline — descenders disappear into the rule below. */
+  .footer-mark {
+    overflow: hidden;
+  }
+  .footer-word {
+    font-size: clamp(5rem, 24vw, 22rem);
+    line-height: 0.74;
+    padding-top: 0.04em;
+    letter-spacing: -0.06em;
+    font-variation-settings: 'opsz' 96;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(255 255 255 / 0.22);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0) 75%);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+  .footer-orbit {
+    position: absolute;
+    right: 6%;
+    top: 12%;
+    width: clamp(3rem, 8vw, 6rem);
+    aspect-ratio: 1;
+    border: 1px dashed rgb(255 255 255 / 0.25);
+    border-radius: 999px;
+    animation: spin-slow 14s linear infinite;
+  }
+  .footer-orbit span {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    border-radius: 999px;
+    background: var(--color-signal);
+    box-shadow: 0 0 16px var(--color-signal);
+  }
+</style>

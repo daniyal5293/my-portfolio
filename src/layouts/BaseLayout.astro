@@ -1,0 +1,55 @@
+---
+import '@fontsource-variable/bricolage-grotesque/opsz.css';
+import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
+import '@fontsource/instrument-serif/latin-400-italic.css';
+import '@/styles/global.css';
+import displayFont from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2?url';
+import SEO from '@/components/layout/SEO.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import { site } from '@/data/portfolio';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  /** "/" on sub-pages so nav links point back to sections on the home page. */
+  navBase?: string;
+}
+
+const { navBase = '', ...seo } = Astro.props;
+---
+
+<!doctype html>
+<html lang={site.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <!-- Flag JS early so reveal styles never hide content when JS is off. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <link rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+    <SEO {...seo} />
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header navBase={navBase} />
+    <main id="main" tabindex="-1" class="outline-none">
+      <slot />
+    </main>
+    <Footer navBase={navBase} />
+
+    <script>
+      import '@/utils/reveal';
+      import '@/utils/magnetic';
+      import '@/utils/scroll-progress';
+      import '@/utils/copy-email';
+      import '@/utils/year';
+      import '@/utils/spotlight';
+    </script>
+  </body>
+</html>

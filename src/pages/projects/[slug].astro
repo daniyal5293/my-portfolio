@@ -1,0 +1,248 @@
+---
+/**
+ * Static case-study pages, one per project in src/data/portfolio.ts.
+ * Sections without content are skipped and the remaining ones are
+ * numbered in order, so placeholders never show up on the page.
+ */
+import type { GetStaticPaths } from 'astro';
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import ProjectPreview from '@/components/projects/ProjectPreview.astro';
+import ArchitectureDiagram from '@/components/projects/ArchitectureDiagram.astro';
+import BrandIcon from '@/components/ui/BrandIcon.astro';
+import { projects, type Project } from '@/data/portfolio';
+import { pad } from '@/utils/text';
+
+export const getStaticPaths = (() =>
+  projects.map((project, i) => ({
+    params: { slug: project.slug },
+    props: { project, next: projects[(i + 1) % projects.length], position: i + 1 },
+  }))) satisfies GetStaticPaths;
+
+interface Props {
+  project: Project;
+  next: Project;
+  position: number;
+}
+const { project, next, position } = Astro.props;
+const cs = project.caseStudy;
+
+type Block = { id: string; title: string; kind: 'text' | 'list' | 'arch' | 'stack' | 'links'; text?: string; items?: string[] };
+const blocks: Block[] = [
+  { id: 'overview', title: 'Overview', kind: 'text' as const, text: project.summary },
+  cs.problem && { id: 'problem', title: 'Problem', kind: 'text' as const, text: cs.problem },
+  cs.role && { id: 'role', title: 'My role', kind: 'text' as const, text: cs.role },
+  { id: 'architecture', title: 'Architecture', kind: 'arch' as const },
+  { id: 'stack', title: 'Technologies', kind: 'stack' as const },
+  cs.challenges.length > 0 && { id: 'challenges', title: 'Challenges', kind: 'list' as const, items: cs.challenges },
+  cs.approach && { id: 'approach', title: 'Approach', kind: 'text' as const, text: cs.approach },
+  cs.features.length > 0 && { id: 'features', title: 'Key features', kind: 'list' as const, items: cs.features },
+  cs.outcomes && { id: 'outcomes', title: 'Outcomes', kind: 'text' as const, text: cs.outcomes },
+  cs.lessons.length > 0 && { id: 'lessons', title: 'Lessons learned', kind: 'list' as const, items: cs.lessons },
+  (project.links.github || project.links.live || project.links.post) && {
+    id: 'links',
+    title: 'Links',
+    kind: 'links' as const,
+  },
+].filter(Boolean) as Block[];
+
+const linkList = [
+  project.links.github && { label: 'Source code', sub: 'GitHub repository', href: project.links.github, icon: 'github' as const },
+  project.links.live && { label: 'Live demo', sub: 'Deployed application', href: project.links.live, icon: null },
+  project.links.post && { label: 'Project post', sub: 'LinkedIn', href: project.links.post, icon: 'linkedin' as const },
+].filter(Boolean) as { label: string; sub: string; href: string; icon: 'github' | 'linkedin' | null }[];
+
+/** Header facts — only fields that have real data are shown. */
+const meta = [
+  { label: 'Category', value: project.category },
+  { label: 'Stack', value: `${project.stack.length} technologies`, href: '#stack' },
+  project.year && { label: 'Year', value: project.year },
+  cs.role && { label: 'Role', value: 'See “My role”', href: '#role' },
+  linkList.length > 0 && { label: 'Links', value: `${linkList.length} available`, href: '#links' },
+].filter(Boolean) as { label: string; value: string; href?: string }[];
+---
+
+<BaseLayout title={project.title} description={`${project.title} — ${project.summary}`} type="article" navBase="/">
+  <article>
+    <!-- Header -->
+    <header class="relative isolate overflow-hidden pt-[calc(var(--header-h)+3rem)] pb-12 md:pt-[calc(var(--header-h)+5rem)]">
+      <div class="bg-grid pointer-events-none absolute inset-0 -z-10 opacity-70 [mask-image:linear-gradient(180deg,#000,transparent)]" aria-hidden="true"></div>
+      <div class="container-x">
+        <nav aria-label="Breadcrumb" class="mb-10">
+          <a href="/#work" class="label inline-flex items-center gap-2 text-[var(--color-ink-2)] hover:text-[var(--color-accent)]">
+            <ArrowLeft size={14} aria-hidden="true" /> All work
+          </a>
+        </nav>
+
+        <p class="label text-[var(--color-ink-3)]">
+          <span class="text-[var(--color-accent)]">Case study P/{pad(position)}</span> — {project.category}
+        </p>
+        <h1 class="mt-5 text-display-lg font-bold">{project.title}</h1>
+        <p class="serif-accent mt-4 text-[clamp(1.5rem,3vw,2.4rem)] text-[var(--color-ink-2)]">{project.tagline}</p>
+
+        <dl class="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-line)] md:auto-cols-fr md:grid-flow-col md:grid-cols-none">
+          {
+            meta.map((m) => (
+              <div class="bg-[var(--color-surface)] p-5">
+                <dt class="label text-[var(--color-ink-3)]">{m.label}</dt>
+                <dd class="mt-2 font-medium">{m.href ? <a href={m.href} class="link-underline">{m.value}</a> : m.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </header>
+
+    <!-- Preview -->
+    <div class="container-x">
+      <div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-line)] aspect-[16/10] md:aspect-[21/9]">
+        <ProjectPreview project={project} size="hero" />
+      </div>
+      {
+        !project.screenshot && (
+          <p class="label mt-3 text-[var(--color-ink-3)]">
+            Illustrative preview — an abstract rendering of the project, not a screenshot.
+          </p>
+        )
+      }
+    </div>
+
+    <!-- Body -->
+    <div class="container-x section-y !pt-20">
+      <div class="grid gap-12 lg:grid-cols-12">
+        <aside class="hidden lg:col-span-3 lg:block">
+          <nav aria-label="On this page" class="sticky top-[calc(var(--header-h)+2rem)]">
+            <p class="label mb-4 text-[var(--color-ink-3)]">On this page</p>
+            <ol class="toc space-y-1 border-l border-[var(--color-line)]">
+              {
+                blocks.map((b, i) => (
+                  <li>
+                    <a href={`#${b.id}`} class="toc-link -ml-px block border-l border-transparent py-1.5 pl-4 text-sm text-[var(--color-ink-2)]" data-toc={b.id}>
+                      <span class="label mr-2 text-[var(--color-ink-3)]">{pad(i + 1)}</span>
+                      {b.title}
+                    </a>
+                  </li>
+                ))
+              }
+            </ol>
+          </nav>
+        </aside>
+
+        <div class="lg:col-span-8 lg:col-start-5">
+          {
+            blocks.map((b, i) => (
+              <section id={b.id} class="cs-block border-t border-[var(--color-line)] py-12 first:border-t-0 first:pt-0" aria-labelledby={`${b.id}-h`} data-cs-block>
+                <h2 id={`${b.id}-h`} class="flex items-baseline gap-4 text-[clamp(1.75rem,3vw,2.5rem)] font-semibold">
+                  <span class="label text-[var(--color-accent)]">{pad(i + 1)}</span>
+                  {b.title}
+                </h2>
+
+                {b.kind === 'text' && <p class="mt-6 text-lg leading-relaxed text-[var(--color-ink-2)] md:text-xl">{b.text}</p>}
+
+                {b.kind === 'list' && (
+                  <ul class="mt-6 space-y-3">
+                    {b.items!.map((item) => (
+                      <li class="flex gap-4 text-lg leading-relaxed text-[var(--color-ink-2)]">
+                        <span class="mt-3 h-1.5 w-1.5 shrink-0 rounded-[2px] bg-[var(--color-accent)]" aria-hidden="true" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {b.kind === 'arch' && (
+                  <div class="mt-8">
+                    <ArchitectureDiagram architecture={cs.architecture} />
+                  </div>
+                )}
+
+                {b.kind === 'stack' && (
+                  <ul class="mt-6 flex flex-wrap gap-2">
+                    {project.stack.map((tech) => (
+                      <li class="rounded-full border border-[var(--color-line-strong)] bg-[var(--color-surface)] px-4 py-2 font-medium">{tech}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {b.kind === 'links' && (
+                  <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+                    {linkList.map((l) => (
+                      <li>
+                        <a
+                          href={l.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="group flex items-center justify-between gap-4 rounded-[var(--radius-md)] border border-[var(--color-line)] bg-[var(--color-surface)] p-5 transition-colors hover:border-[var(--color-accent)]"
+                        >
+                          <span class="flex items-center gap-3">
+                            {l.icon ? <BrandIcon name={l.icon} size={20} /> : <ArrowUpRight size={20} aria-hidden="true" />}
+                            <span>
+                              <span class="block font-semibold">{l.label}</span>
+                              <span class="block text-sm text-[var(--color-ink-3)]">{l.sub}</span>
+                            </span>
+                          </span>
+                          <ArrowUpRight size={18} aria-hidden="true" className="transition-transform duration-500 group-hover:rotate-45" />
+                          <span class="sr-only">(opens in a new tab)</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Next project -->
+    {
+      next.slug !== project.slug && (
+        <a href={`/projects/${next.slug}/`} class="next-project group block border-t border-[var(--color-line)] bg-[var(--color-surface)]">
+          <div class="container-x flex items-end justify-between gap-6 py-16 md:py-24">
+            <span>
+              <span class="label block text-[var(--color-ink-3)]">Next case study</span>
+              <span class="mt-4 block font-display text-[clamp(2.4rem,7vw,6rem)] leading-[0.9] font-bold tracking-[-0.045em] transition-colors group-hover:text-[var(--color-accent)]">
+                {next.title}
+              </span>
+              <span class="serif-accent mt-3 block text-xl text-[var(--color-ink-2)]">{next.tagline}</span>
+            </span>
+            <span class="mb-2 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--color-ink)] text-white transition-transform duration-500 group-hover:translate-x-2 group-hover:bg-[var(--color-accent)] md:h-20 md:w-20">
+              <ArrowRight size={24} aria-hidden="true" />
+            </span>
+          </div>
+        </a>
+      )
+    }
+  </article>
+</BaseLayout>
+
+<style>
+  .toc-link[aria-current='true'] {
+    color: var(--color-ink);
+    border-left-color: var(--color-accent);
+    font-weight: 600;
+  }
+  .toc-link:hover {
+    color: var(--color-ink);
+  }
+</style>
+
+<script>
+  // Highlight the current case-study section in the sticky table of contents.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc]')];
+  const blocks = [...document.querySelectorAll<HTMLElement>('[data-cs-block]')];
+  if (links.length && 'IntersectionObserver' in window) {
+    const inBand = new Set<Element>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => (e.isIntersecting ? inBand.add(e.target) : inBand.delete(e.target)));
+        const current = blocks.find((b) => inBand.has(b));
+        if (!current) return;
+        links.forEach((l) => l.setAttribute('aria-current', String(l.dataset.toc === current.id)));
+      },
+      { rootMargin: '-30% 0px -65% 0px' },
+    );
+    blocks.forEach((b) => io.observe(b));
+  }
+</script>

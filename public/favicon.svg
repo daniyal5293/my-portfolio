@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="16" fill="#0c0e13"/>
+  <rect x="9" y="9" width="46" height="46" rx="10" fill="none" stroke="#2b3dff" stroke-width="2.5"/>
+  <text x="32" y="41" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="-1" fill="#ffffff">DK</text>
+  <circle cx="52" cy="12" r="5" fill="#ff5a1f"/>
+</svg>
