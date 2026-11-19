@@ -16,7 +16,7 @@ const spec: [string, string][] = [
   ['role', person.role],
   ['base', person.location],
   ...(degree ? ([['study', `${degree.degree}, ${degree.shortName ?? degree.institution}`]] as [string, string][]) : []),
-  ['focus', 'Full-stack · Containers · AWS'],
+  ['focus', 'DevOps · Cloud · Infrastructure as code'],
   ...(experience.length
     ? ([['interned', experience.map((e) => e.organization).join(', ')]] as [string, string][])
     : []),

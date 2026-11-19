@@ -159,7 +159,7 @@ export default function HeroStage({ eventSourceId }: Props) {
           >
             {phase === 'idle' ? <Play size={12} aria-hidden="true" /> : <RotateCcw size={12} aria-hidden="true" />}
             <span>{phase === 'idle' ? 'Deploy' : phase === 'scheduling' ? 'Deploying' : 'Redeploy'}</span>
-            <span className="sr-only"> — animate the container pods into formation</span>
+            <span className="sr-only"> — animate the service pods into formation</span>
           </button>
         </div>
       )}

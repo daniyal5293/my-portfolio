@@ -72,7 +72,10 @@ export interface Achievement {
   status: 'completed' | 'in-progress';
   date: string | null; // PLACEHOLDER
   detail?: string;
+  /** Full https:// link to verify the credential. */
   credentialUrl: string | null; // PLACEHOLDER
+  /** Certificate / credential ID shown as text (use when you have no link). */
+  credentialId?: string;
 }
 
 export type PreviewVariant = 'booking' | 'containers' | 'server' | 'inbox';
@@ -141,9 +144,9 @@ export interface Testimonial {
 /* ───────────────────────────── Site ───────────────────────────── */
 
 export const site = {
-  title: 'Daniyal Ahmed Khan — Software & Cloud Engineer',
+  title: 'Daniyal Ahmed Khan — DevOps Engineer',
   description:
-    'Portfolio of Daniyal Ahmed Khan, a Software & Cloud Engineer from Karachi building full-stack applications and the containerized cloud infrastructure they run on.',
+    'Portfolio of Daniyal Ahmed Khan, a DevOps Engineer from Karachi working with Docker, Kubernetes, Terraform and AWS to take software from code to production.',
   locale: 'en',
   ogImage: '/og.png',
   themeColor: '#F2F0EB',
@@ -156,15 +159,17 @@ export const person = {
   firstName: 'Daniyal',
   lastName: 'Ahmed Khan',
   initials: 'DK',
-  role: 'Software & Cloud Engineer',
+  role: 'DevOps Engineer',
   location: 'Karachi, Pakistan',
   /** Shown as a technical label in the hero. */
   coordinates: '24.86° N, 67.00° E',
+  /** Shown as a technical label in the hero footer. */
+  stackLine: 'Docker / Kubernetes / Terraform / AWS',
   // DRAFT COPY — wrap words in *asterisks* to render them in the serif accent style.
-  headline: 'I build full-stack products and the *containerized cloud* they run on.',
+  headline: 'I engineer the path from *code to production* — infrastructure, orchestration and cloud.',
   // DRAFT COPY — based on the objective in your CV.
   intro:
-    'Software Engineering student at FAST-NUCES working across Next.js, TypeScript, Docker and AWS — focused on scalable, containerized systems that are ready for production, not just the demo.',
+    'DevOps engineer and Software Engineering student at FAST-NUCES. I work with Docker, Kubernetes, Terraform and AWS to make systems reproducible, scalable and ready for production — not just the demo.',
   availability: {
     // Set `enabled: false` to hide the status pill.
     enabled: true,
@@ -217,20 +222,20 @@ export const socials: SocialLink[] = [
 
 // DRAFT COPY — every statement below comes from your CV. Rewrite freely.
 export const about = {
-  pullQuote: 'Code that works on my machine is a draft. Code that runs in a container, on real infrastructure, is a product.',
+  pullQuote: 'Shipping isn’t the last step of the work. It is the work — reproducible, versioned and automated.',
   paragraphs: [
     'My path started with pre-engineering at TCF College and led to a BS in Software Engineering at FAST-NUCES in Karachi, where I’m in the class of 2027.',
     'Alongside my degree I’ve interned as a Software Engineer at Folio3 — finishing as the 1st position holder — and as a Cloud Computing intern at Multinet. Those two roles shaped how I work: build the product, then own how it ships.',
-    'I enjoy building full-stack applications with MERN, Next.js and Spring Boot, and I care just as much about what sits underneath them — Docker images, Compose files, Kubernetes manifests and AWS infrastructure.',
+    'Today I focus on DevOps: Docker and Kubernetes for running services, Terraform for infrastructure as code, and AWS for the cloud underneath. I still build full-stack apps with MERN and Next.js — which makes me better at deploying them.',
   ],
   principles: [
     {
-      title: 'Containerize early',
-      text: 'If it runs in a container from day one, it runs the same in development, CI and production.',
+      title: 'Everything as code',
+      text: 'Infrastructure, environments and deployments live in versioned files — reviewable, repeatable and easy to rebuild.',
     },
     {
-      title: 'Infrastructure is part of the feature',
-      text: 'Security groups, servers and deployment are designed with the app — not bolted on at the end.',
+      title: 'Automate the repeatable',
+      text: 'If a step has to be done twice, it belongs in a script or a config file — not in someone’s memory.',
     },
     {
       title: 'Ship, then sharpen',
@@ -238,7 +243,7 @@ export const about = {
     },
   ],
   direction:
-    'Next: completing the AWS Solutions Architect – Associate (SAA-C03) certification and growing into a cloud engineering role.',
+    'Next: completing the AWS Solutions Architect – Associate (SAA-C03) certification and growing as a DevOps engineer.',
 };
 
 /* ───────────────────────────── Skills ───────────────────────────── */
@@ -249,6 +254,29 @@ export const about = {
  * (matched against project `stack` entries).
  */
 export const skillGroups: SkillGroup[] = [
+  {
+    id: 'devops',
+    title: 'DevOps',
+    blurb: 'Orchestration and infrastructure as code — the core of what I do.',
+    skills: [
+      { name: 'Docker', note: 'KodeKloud training' },
+      { name: 'Docker Compose' },
+      { name: 'Kubernetes' },
+      { name: 'Terraform' },
+    ],
+  },
+  {
+    id: 'cloud',
+    title: 'Cloud',
+    blurb: 'AWS infrastructure and Linux servers.',
+    skills: [
+      { name: 'AWS', note: 'Solutions Architect – Associate in progress' },
+      { name: 'AWS EC2' },
+      { name: 'Security Groups' },
+      { name: 'Ubuntu Server' },
+      { name: 'Linux' },
+    ],
+  },
   {
     id: 'languages',
     title: 'Languages',
@@ -265,35 +293,13 @@ export const skillGroups: SkillGroup[] = [
     id: 'backend',
     title: 'Backend',
     blurb: 'APIs and services, from Node to Spring.',
-    skills: [{ name: 'Node.js' }, { name: 'Express.js' }, { name: 'Spring Boot' }, { name: 'REST APIs' }],
+    skills: [{ name: 'Node.js' }, { name: 'Express.js' }, { name: 'REST APIs' }],
   },
   {
     id: 'databases',
     title: 'Databases',
     blurb: 'Relational and document stores.',
     skills: [{ name: 'MongoDB' }, { name: 'MySQL' }],
-  },
-  {
-    id: 'cloud',
-    title: 'Cloud',
-    blurb: 'AWS infrastructure and Linux servers.',
-    skills: [
-      { name: 'AWS', note: 'Solutions Architect – Associate in progress' },
-      { name: 'AWS EC2' },
-      { name: 'Security Groups' },
-      { name: 'Ubuntu Server' },
-      { name: 'Linux' },
-    ],
-  },
-  {
-    id: 'devops',
-    title: 'DevOps',
-    blurb: 'Packaging and orchestrating services.',
-    skills: [
-      { name: 'Docker', note: 'KodeKloud training' },
-      { name: 'Docker Compose' },
-      { name: 'Kubernetes' },
-    ],
   },
   {
     id: 'tools',
@@ -317,24 +323,24 @@ export const experience: Experience[] = [
     organization: 'Folio3',
     role: 'Software Engineer Intern',
     type: 'Internship',
-    period: null, // PLACEHOLDER — e.g. "Jun 2025 – Aug 2025"
-    location: null, // PLACEHOLDER
-    summary: null, // PLACEHOLDER — one sentence on what the team built
-    responsibilities: [], // PLACEHOLDER — 2–4 bullet points
+    period: 'Jun 2026 – Aug 2026',
+    location: 'Karachi, Pakistan',
+    summary: 'Built a SaaS application where mentees book 1:1 sessions with mentors.',
+    responsibilities: ['Developed and maintained the application using modern web technologies.'],
     contributions: ['Finished the internship programme as the 1st position holder.'],
-    technologies: [], // PLACEHOLDER
+    technologies: ['React', 'Node.js', 'Express.js', 'MongoDB', 'Docker', 'AWS'],
     badge: '1st position',
   },
   {
     organization: 'Multinet Pvt. Ltd',
     role: 'Cloud Computing Intern',
     type: 'Internship',
-    period: null, // PLACEHOLDER
-    location: null, // PLACEHOLDER
-    summary: null, // PLACEHOLDER
-    responsibilities: [], // PLACEHOLDER
+    period: 'Jun 2025 – Aug 2025',
+    location: 'Karachi, Pakistan',
+    summary: 'Gained hands-on experience with cloud computing technologies and practices.',
+    responsibilities: ['Assisted in deploying and managing cloud infrastructure.'],
     contributions: [],
-    technologies: [], // PLACEHOLDER
+    technologies: ['AWS', 'Docker', 'Terraform'],
   },
 ];
 
@@ -348,8 +354,8 @@ export const education: Education[] = [
     period: 'Aug 2023 – Jun 2027',
     location: 'Karachi, Pakistan',
     status: 'In progress',
-    achievements: ['CGPA 3.11 / 4.0'],
-    coursework: [], // PLACEHOLDER — e.g. "Software Design & Architecture"
+    achievements: ['CGPA 3.15 / 4.0'],
+    coursework: ['Data Structures and Algorithms', 'Database Systems', 'OOP', 'Applied DevOps'], 
   },
   {
     institution: 'TCF College',
@@ -358,7 +364,7 @@ export const education: Education[] = [
     location: 'Karachi, Pakistan',
     status: 'Completed',
     achievements: ['Grade A+'],
-    coursework: [],
+    coursework: ['Mathematics', 'Physics', 'Chemistry'],
   },
 ];
 
@@ -370,9 +376,9 @@ export const achievements: Achievement[] = [
     issuer: 'Folio3 — Software Engineer Internship',
     kind: 'award',
     status: 'completed',
-    date: null, // PLACEHOLDER
+    date: 'Aug 2026',
     detail: 'Top-ranked intern in the software engineering internship programme.',
-    credentialUrl: null, // PLACEHOLDER — certificate link, if any
+    credentialUrl: null,
   },
   {
     title: 'AWS Solutions Architect – Associate (SAA-C03)',
@@ -388,15 +394,17 @@ export const achievements: Achievement[] = [
     issuer: 'KodeKloud',
     kind: 'training',
     status: 'completed',
-    date: null, // PLACEHOLDER
-    credentialUrl: null, // PLACEHOLDER
+    date: 'May 2026',
+    // An ID is not a link — paste the full https:// verification URL here to make it clickable.
+    credentialUrl: null,
+    credentialId: 'e881ce90-043b-4d25-9c00-0b11f49e1754',
   },
   {
     title: 'Cloud Computing Internship',
     issuer: 'Multinet Pvt. Ltd',
     kind: 'training',
     status: 'completed',
-    date: null,
+    date: 'Aug 2025',
     credentialUrl: null,
   },
   {
@@ -413,21 +421,26 @@ export const achievements: Achievement[] = [
 
 export const projects: Project[] = [
   {
-    slug: 'prolign',
-    title: 'Prolign',
+    slug: 'guidify', // URL: /projects/guidify/ — keep slugs lowercase
+    title: 'Guidify — Mentor–Mentee Platform',
     category: 'Full-stack platform',
     tagline: 'Paid mentorship sessions, booked online.',
     summary:
       'A mentor–mentee platform where mentees book paid video sessions with mentors. The product is scoped to users in Pakistan.',
     stack: ['MongoDB', 'Express.js', 'React', 'Node.js', 'Python', 'AWS', 'Docker', 'JIRA', 'E2E tests'],
-    year: null, // PLACEHOLDER
+    year: '2026',
     preview: 'booking',
-    screenshot: null, // PLACEHOLDER — e.g. { src: '/projects/prolign.webp', alt: '…' }
-    links: { github: null, live: null, post: null }, // PLACEHOLDER
+    // Screenshots live in /public — the path starts with "/" and omits "public".
+    screenshot: {
+      src: '/projects/guidify.webp',
+      alt: 'Guidify landing page: the headline “Find the mentor who’s already been there” beside a chat with Ayla, the AI career guide, suggesting a matched mentor.',
+    },
+    links: { github: 'https://github.com/daniyal5293/Guidify', live: null, post: null },
     featured: true,
     caseStudy: {
-      problem: null, // PLACEHOLDER — what problem did Prolign solve, and for whom?
-      role: null, // PLACEHOLDER — your role and team size
+      problem:
+        'Mentees struggle to find the right mentor. Guidify matches them with suitable mentors through an AI interview and a matching algorithm.',
+      role: 'Backend Developer',
       architecture: {
         caption: 'Stack by layer, as listed for the project.',
         layers: [
@@ -439,9 +452,14 @@ export const projects: Project[] = [
           { label: 'Delivery', items: ['JIRA', 'E2E tests'] },
         ],
       },
-      challenges: [], // PLACEHOLDER
-      approach: null, // PLACEHOLDER
+      challenges: [
+        'Ensuring secure payment processing for mentees booking sessions.',
+        'Implementing a reliable matching algorithm for mentor–mentee pairing.',
+      ],
+      approach:
+        'Developed a microservices-based architecture to handle different aspects of the platform, ensuring scalability and maintainability.',
       features: [
+        'An AI interview captures each mentee’s goals and feeds the mentor-matching algorithm.',
         'Mentees book one-to-one video sessions with mentors.',
         'Sessions are paid — mentees pay the mentor as part of booking.',
         'Scoped to the Pakistani market.',
@@ -455,18 +473,22 @@ export const projects: Project[] = [
   {
     slug: 'containerized-mern',
     title: 'Containerized MERN App',
-    category: 'Containers & DevOps',
-    tagline: 'A full MERN stack, orchestrated as containers.',
+    category: 'DevOps',
+    tagline: 'A MERN stack, deployed with Docker Compose.',
     summary:
-      'A full-stack MERN application packaged as a multi-container deployment and orchestrated with Docker Compose.',
+      'A full-stack MERN application deployed as a multi-service stack and orchestrated with Docker Compose.',
     stack: ['MongoDB', 'Express.js', 'React', 'Node.js', 'Docker', 'Docker Compose'],
-    year: null, // PLACEHOLDER
+    year: '2026',
     preview: 'containers',
     screenshot: null,
-    links: { github: null, live: null, post: null }, // PLACEHOLDER
+    links: {
+      github: 'https://github.com/daniyal5293/Containerize_MERN_APP_Docker_compose',
+      live: null,
+      post: 'https://www.linkedin.com/feed/update/urn:li:activity:7418687400174051328/',
+    },
     caseStudy: {
-      problem: null, // PLACEHOLDER
-      role: null, // PLACEHOLDER
+      problem: 'How do you deploy a full-stack MERN application as a reproducible, multi-service stack with Docker Compose?',
+      role: 'DevOps / cloud engineer',
       architecture: {
         caption: 'Multi-container deployment defined with Docker Compose.',
         envelope: 'Docker Compose',
@@ -476,51 +498,23 @@ export const projects: Project[] = [
           { label: 'Database', items: ['MongoDB'] },
         ],
       },
-      challenges: [], // PLACEHOLDER
-      approach: null, // PLACEHOLDER
+      challenges: [
+        'Ensuring that each service runs in isolation and communicates correctly with the others.',
+        'Managing environment variables and configuration for different environments.',
+      ],
+      approach:
+        'Implemented a multi-service deployment using Docker Compose, so each service runs in isolation and the whole stack starts from one configuration.',
       features: [
         'Full-stack MERN application: MongoDB, Express.js, React and Node.js.',
         'Multi-container deployment orchestrated with Docker Compose.',
         'The whole stack is described in one Compose configuration.',
       ],
-      outcomes: null, // PLACEHOLDER
-      lessons: [], // PLACEHOLDER
-    },
-  },
-  {
-    slug: 'portfolio-on-ec2',
-    title: 'Portfolio on AWS EC2',
-    category: 'Cloud deployment',
-    tagline: 'A 3D portfolio, self-hosted on EC2.',
-    summary:
-      'A 3D interactive portfolio deployed on an AWS EC2 instance running Ubuntu Server, with custom security group configuration.',
-    stack: ['AWS EC2', 'Ubuntu Server', 'Security Groups', 'Linux'],
-    year: null, // PLACEHOLDER
-    preview: 'server',
-    screenshot: null,
-    links: { github: null, live: null, post: null }, // PLACEHOLDER
-    caseStudy: {
-      problem: null, // PLACEHOLDER
-      role: null, // PLACEHOLDER
-      architecture: {
-        caption: 'Hosting stack, from the network edge to the app.',
-        envelope: 'AWS',
-        layers: [
-          { label: 'Network', items: ['Security Groups'] },
-          { label: 'Compute', items: ['AWS EC2'] },
-          { label: 'OS', items: ['Ubuntu Server'] },
-          { label: 'App', items: ['3D portfolio'] },
-        ],
-      },
-      challenges: [], // PLACEHOLDER
-      approach: null, // PLACEHOLDER
-      features: [
-        'Interactive 3D portfolio served from an AWS EC2 instance.',
-        'Ubuntu Server set up and configured on the instance.',
-        'Custom security group rules controlling access to the server.',
+      outcomes:
+        'Successfully deployed the MERN application as a multi-service stack, improving scalability and maintainability.',
+      lessons: [
+        'Properly configuring environment variables for different environments.',
+        'Designing reliable service-to-service networking.',
       ],
-      outcomes: null, // PLACEHOLDER
-      lessons: [], // PLACEHOLDER
     },
   },
   {
@@ -531,13 +525,17 @@ export const projects: Project[] = [
     summary:
       'A full-stack email management app with Spring Boot REST APIs, a React.js frontend and MySQL for persistence.',
     stack: ['Spring Boot', 'React', 'MySQL', 'REST APIs'],
-    year: null, // PLACEHOLDER
+    year: '2026',
     preview: 'inbox',
     screenshot: null,
-    links: { github: null, live: null, post: null }, // PLACEHOLDER
+    links: {
+      github: 'https://github.com/daniyal5293/Email_Assistant_ChromeEXT-FullStackProject',
+      live: null,
+      post: 'https://www.linkedin.com/feed/update/urn:li:activity:7413625284198924288/',
+    },
     caseStudy: {
-      problem: null, // PLACEHOLDER
-      role: null, // PLACEHOLDER
+      problem: 'How do you build a full-stack email management app with a Spring Boot backend and a React.js frontend?',
+      role: 'Full-stack developer',
       architecture: {
         caption: 'Three-tier stack, as listed for the project.',
         layers: [
@@ -546,16 +544,24 @@ export const projects: Project[] = [
           { label: 'Database', items: ['MySQL'] },
         ],
       },
-      challenges: [], // PLACEHOLDER
-      approach: null, // PLACEHOLDER
+      challenges: [
+        'Managing the complexity of a full-stack application with multiple technologies.',
+        'Ensuring seamless integration between the frontend and backend services.',
+      ],
+      approach:
+        'Implemented a three-tier architecture with a Spring Boot backend, React.js frontend and MySQL database for persistence.',
       features: [
         'Email management from a single web interface.',
         'Backend exposed as Spring Boot REST APIs.',
         'React.js frontend consuming the API.',
         'MySQL database for persistence.',
       ],
-      outcomes: null, // PLACEHOLDER
-      lessons: [], // PLACEHOLDER
+      outcomes:
+        'Successfully built the email assistant as a Chrome extension, demonstrating proficiency in Spring Boot, React.js and MySQL.',
+      lessons: [
+        'Effective communication and collaboration between frontend and backend teams.',
+        'Managing dependencies and versioning in a full-stack application.',
+      ],
     },
   },
 ];
@@ -598,19 +604,19 @@ export const processSteps: ProcessStep[] = [
   },
   {
     id: 'test',
-    title: 'Test & containerize',
+    title: 'Test & package',
     command: 'docker compose up --build',
     description:
-      'Validate behaviour with tests, then package each service in a container so it runs the same everywhere.',
+      'Validate behaviour with tests, then package every service with Docker so each environment runs the exact same build.',
     outputs: ['E2E checks', 'Docker images', 'Compose config'],
   },
   {
     id: 'deploy',
-    title: 'Deploy & improve',
-    command: 'deploy --target cloud',
+    title: 'Provision & deploy',
+    command: 'terraform apply',
     description:
-      'Release to cloud infrastructure with sensible network rules, watch how it behaves for real, and feed that back into the next iteration.',
-    outputs: ['Live release', 'Security rules', 'Next iteration'],
+      'Provision infrastructure as code, release to the cloud with sensible network rules, watch how it behaves for real and feed that back into the next iteration.',
+    outputs: ['Infrastructure as code', 'Live release', 'Next iteration'],
   },
 ];
 
@@ -620,7 +626,17 @@ export const processSteps: ProcessStep[] = [
  * Only add genuine recommendations (e.g. copied from LinkedIn, with permission).
  * The section stays hidden while this array is empty.
  */
-export const testimonials: Testimonial[] = [];
+export const testimonials: Testimonial[] = [
+  {
+    // From a LinkedIn comment (emojis removed). Add the comment's URL to `source` to link it.
+    quote:
+      'You’re someone who’s passionate and gives full devotion to whatever they step into. Really proud of you. Best of luck for future endeavors!',
+    name: 'Shah Hunain',
+    role: 'Software Engineer I',
+    organization: 'Encore',
+    source: null,
+  },
+];
 
 /* ───────────────────────────── Navigation ───────────────────────────── */
 

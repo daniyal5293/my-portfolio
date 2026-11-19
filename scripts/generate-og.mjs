@@ -13,8 +13,8 @@ const pub = (p) => `${root}public/${p}`;
 
 const NAME_1 = 'Daniyal';
 const NAME_2 = 'Ahmed Khan.';
-const ROLE = 'SOFTWARE &amp; CLOUD ENGINEER';
-const LINE = 'Full-stack products and the containerized cloud they run on.';
+const ROLE = 'DEVOPS ENGINEER';
+const LINE = 'The path from code to production — infrastructure, orchestration, cloud.';
 const FONT = "Segoe UI, 'Helvetica Neue', Arial, sans-serif";
 const MONO = "Consolas, 'Courier New', monospace";
 
@@ -65,7 +65,7 @@ const og = `
   <text x="66" y="386" font-family="${FONT}" font-size="104" font-weight="800" letter-spacing="-5" fill="#0c0e13">${NAME_2}</text>
   <text x="72" y="470" font-family="${FONT}" font-size="28" fill="#3a3f4a">${LINE}</text>
   <rect x="72" y="530" width="12" height="12" rx="3" fill="#0b8a5f"/>
-  <text x="96" y="542" font-family="${MONO}" font-size="18" letter-spacing="2" fill="#5c616c">KARACHI, PK · NEXT.JS · DOCKER · KUBERNETES · AWS</text>
+  <text x="96" y="542" font-family="${MONO}" font-size="18" letter-spacing="2" fill="#5c616c">KARACHI, PK · DOCKER · KUBERNETES · TERRAFORM · AWS</text>
 </svg>`;
 
 await sharp(Buffer.from(og)).png({ compressionLevel: 9 }).toFile(pub('og.png'));

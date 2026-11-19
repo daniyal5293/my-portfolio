@@ -21,13 +21,26 @@ const v = project.preview;
 >
   {
     project.screenshot ? (
-      <img
-        src={project.screenshot.src}
-        alt={project.screenshot.alt}
-        loading="lazy"
-        decoding="async"
-        class="h-full w-full object-cover object-top"
-      />
+      // Real screenshot, framed in a minimal browser window so it is never cropped.
+      <>
+        <div class="preview-bg absolute inset-0" aria-hidden="true" />
+        <div class="preview-stage absolute inset-0 flex items-center justify-center p-[6%]">
+          <figure class="shot layer-a w-full overflow-hidden rounded-xl">
+            <div class="shot-bar flex items-center gap-1.5 px-3 py-2" aria-hidden="true">
+              <span class="tb" />
+              <span class="tb" />
+              <span class="tb" />
+            </div>
+            <img
+              src={project.screenshot.src}
+              alt={project.screenshot.alt}
+              loading="lazy"
+              decoding="async"
+              class="block h-auto w-full"
+            />
+          </figure>
+        </div>
+      </>
     ) : (
       <>
         <div class="preview-bg absolute inset-0" aria-hidden="true" />
@@ -219,6 +232,22 @@ const v = project.preview;
   }
   :global([data-spotlight]:hover) .layer-b {
     transform: translate3d(calc(var(--px, 0) * -26px), calc(var(--py, 0) * -26px), 0);
+  }
+
+  .shot {
+    max-width: 44rem;
+    background: #fff;
+    border: 1px solid rgb(12 14 19 / 0.1);
+    box-shadow:
+      0 2px 4px rgb(12 14 19 / 0.05),
+      0 30px 60px -25px rgb(12 14 19 / 0.4);
+  }
+  .shot-bar {
+    background: #f4f3ef;
+    border-bottom: 1px solid rgb(12 14 19 / 0.08);
+  }
+  .shot-bar .tb {
+    background: rgb(12 14 19 / 0.15);
   }
 
   .ui-card {
